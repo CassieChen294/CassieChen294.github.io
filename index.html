@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fall 2026 课程时间表</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4F0;
+    --panel: #FFFFFF;
+    --ink: #423E3A;
+    --ink-soft: #8B8478;
+    --line: #E9E3D8;
+    --line-strong: #D6CEBE;
+    --accent: #B98B86;
+
+    --c131: #6C93A3; --c131-dark: #47606D;
+    --c139: #D6928A; --c139-dark: #A85A50;
+    --c155: #8DAB6C; --c155-dark: #5F7A3B;
+    --cenv: #D1A452; --cenv-dark: #9A741C;
+    --csoc: #A87F66; --csoc-dark: #7A5842;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --bg: #1B1917;
+      --panel: #242220;
+      --ink: #E9E3D8;
+      --ink-soft: #A69C8C;
+      --line: #38352F;
+      --line-strong: #4A453C;
+      --accent: #D6928A;
+
+      --c131: #93B7C6; --c131-dark: #6C93A3;
+      --c139: #E4AFA8; --c139-dark: #D6928A;
+      --c155: #A9C488; --c155-dark: #8DAB6C;
+      --cenv: #E3BD73; --cenv-dark: #D1A452;
+      --csoc: #C29E85; --csoc-dark: #A87F66;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1B1917;
+    --panel: #242220;
+    --ink: #E9E3D8;
+    --ink-soft: #A69C8C;
+    --line: #38352F;
+    --line-strong: #4A453C;
+    --accent: #D6928A;
+
+    --c131: #93B7C6; --c131-dark: #6C93A3;
+    --c139: #E4AFA8; --c139-dark: #D6928A;
+    --c155: #A9C488; --c155-dark: #8DAB6C;
+    --cenv: #E3BD73; --cenv-dark: #D1A452;
+    --csoc: #C29E85; --csoc-dark: #A87F66;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  header.top {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 28px;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 20px;
+  }
+  header.top .term {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--panel);
+    background: var(--accent);
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 3px;
+    width: fit-content;
+  }
+  header.top h1 {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 700;
+    font-size: clamp(28px, 4.5vw, 42px);
+    margin: 4px 0 0;
+    letter-spacing: -0.01em;
+  }
+  header.top p.sub {
+    color: var(--ink-soft);
+    font-size: 15px;
+    margin: 2px 0 0;
+    max-width: 62ch;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    margin: 22px 0 26px;
+    padding: 16px 18px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .legend-group { display:flex; flex-direction:column; gap:8px; flex: 1 1 auto; min-width: 220px; }
+  .legend-group h3 {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin: 0 0 2px;
+    font-weight: 500;
+  }
+  .legend-item { display:flex; align-items:center; gap:8px; font-size: 13.5px; }
+  .swatch { width: 14px; height: 14px; border-radius: 3px; flex: none; }
+  .swatch.lec { position: relative; }
+  .swatch.lec::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--ink);
+    border-radius: 3px 0 0 3px;
+  }
+  .swatch.oh { border-width: 1.6px; border-style: dashed; background: transparent; }
+
+  .scroller {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--panel);
+  }
+
+  .grid-wrap {
+    display: grid;
+    grid-template-columns: 56px repeat(5, minmax(150px, 1fr));
+    min-width: 820px;
+  }
+
+  .day-head {
+    padding: 12px 8px 10px;
+    text-align: center;
+    font-family: 'Source Serif 4', serif;
+    font-weight: 600;
+    font-size: 15px;
+    border-bottom: 2px solid var(--line-strong);
+    border-left: 1px solid var(--line);
+    background: var(--panel);
+    position: sticky;
+    top: 0;
+  }
+  .day-head span {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+  .corner {
+    border-bottom: 2px solid var(--line-strong);
+  }
+
+  .time-col {
+    position: relative;
+  }
+  .time-label {
+    position: absolute;
+    right: 8px;
+    transform: translateY(-50%);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+  }
+
+  .day-col {
+    position: relative;
+    border-left: 1px solid var(--line);
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent calc(var(--hr) - 1px),
+      var(--line) calc(var(--hr) - 1px),
+      var(--line) var(--hr)
+    );
+  }
+
+  .event {
+    position: absolute;
+    border-radius: 6px;
+    padding: 5px 7px 5px 8px;
+    font-size: 11.5px;
+    line-height: 1.28;
+    overflow: hidden;
+    color: #fff;
+  }
+  .event .t {
+    font-weight: 600;
+    font-size: 12px;
+    display: block;
+  }
+  .event .m {
+    display: block;
+    opacity: 0.92;
+    font-size: 10.8px;
+    margin-top: 1px;
+  }
+  .event .time {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.8px;
+    opacity: 0.85;
+    margin-top: 2px;
+  }
+
+  .event.lec {
+    border-left: 4px solid var(--edark);
+    padding-left: 7px;
+    filter: saturate(1.35);
+  }
+
+  .event.oh {
+    background: color-mix(in srgb, var(--ecolor) 14%, var(--panel));
+    border: 1.6px dashed var(--ecolor);
+    color: var(--ecolor);
+    padding: 5px 7px;
+  }
+  .event.oh .t, .event.oh .m, .event.oh .time { color: var(--ecolor); }
+
+  footer.note {
+    margin-top: 22px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 640px) {
+    .page { padding: 24px 14px 60px; }
+    .legend { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="top">
+    <span class="term">FALL 2026 · UCB EXTENSION</span>
+    <h1>课程时间表</h1>
+    <p class="sub">ECON 131 · ECON 139 · ECON 155 · ENVECON C118 · SOCIOL 198 — 讲座 (LEC)、讨论课 (DIS) 与办公时间 (OH) 一览</p>
+  </header>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="scroller">
+    <div class="grid-wrap" id="gridWrap" style="--hr: 60px;">
+      <div class="corner"></div>
+      <div class="day-head">周一<span>MON</span></div>
+      <div class="day-head">周二<span>TUE</span></div>
+      <div class="day-head">周三<span>WED</span></div>
+      <div class="day-head">周四<span>THU</span></div>
+      <div class="day-head">周五<span>FRI</span></div>
+
+      <div class="time-col" id="timeCol"></div>
+      <div class="day-col" id="col-mon"></div>
+      <div class="day-col" id="col-tue"></div>
+      <div class="day-col" id="col-wed"></div>
+      <div class="day-col" id="col-thu"></div>
+      <div class="day-col" id="col-fri"></div>
+    </div>
+  </div>
+
+  <footer class="note">
+    时间以太平洋时间显示；办公时间信息如有变动请以课程官方公告为准。ECON 155 的虚拟办公时间需通过 Zoom 参加，请自行确认链接。
+  </footer>
+
+</div>
+
+<script>
+const COURSES = {
+  e131: { name: "ECON 131", full: "Public Economics", instructor: "Danny Yagan", building: "Undergrad Academic Building 100", color: "var(--c131)", dark: "var(--c131-dark)" },
+  e139: { name: "ECON 139", full: "Asset Pricing & Portfolio", instructor: "Stephen Bianchi", building: "Valley Life Sciences 2040", color: "var(--c139)", dark: "var(--c139-dark)" },
+  e155: { name: "ECON 155", full: "Urban Economics", instructor: "Nilopa Shah", building: "Valley Life Sciences 2060", color: "var(--c155)", dark: "var(--c155-dark)" },
+  env118: { name: "ENVECON C118", full: "Intro Applied Econometrics", instructor: "Jeremy Magruder", building: "Haas Faculty Wing F295", color: "var(--cenv)", dark: "var(--cenv-dark)" },
+  soc198: { name: "SOCIOL 198", full: "Directed Group Study", instructor: "—", building: "—", color: "var(--csoc)", dark: "var(--csoc-dark)" },
+};
+
+// minutes are from midnight. day: mon/tue/wed/thu/fri
+const EVENTS = [
+  // ECON 131
+  { course: "e131", type: "LEC", day: "mon", start: 16*60, end: 18*60+59, loc: "UGAB 100" },
+  { course: "e131", type: "DIS", day: "mon", start: 11*60, end: 11*60+59, loc: "Social Science Building 175" },
+  { course: "e131", type: "OH",  day: "mon", start: 10*60, end: 12*60,     who: "Danny Yagan", loc: "Evans 647" },
+  { course: "e131", type: "OH",  day: "tue", start: 12*60, end: 14*60,     who: "Rebecca Cambrini", loc: "Evans 640" },
+  { course: "e131", type: "OH",  day: "tue", start: 8*60,  end: 9*60+59,   who: "Rodrigo Nicolau Blanchet", loc: "Evans 630" },
+
+  // ECON 139
+  { course: "e139", type: "LEC", day: "mon", start: 14*60, end: 14*60+59, loc: "VLSB 2040" },
+  { course: "e139", type: "LEC", day: "wed", start: 14*60, end: 14*60+59, loc: "VLSB 2040" },
+  { course: "e139", type: "LEC", day: "fri", start: 14*60, end: 14*60+59, loc: "VLSB 2040" },
+  { course: "e139", type: "OH",  day: "mon", start: 15*60+15, end: 16*60+45, who: "Stephen Bianchi", loc: "Evans 673" },
+  { course: "e139", type: "OH",  day: "wed", start: 15*60+15, end: 16*60+45, who: "Stephen Bianchi", loc: "Evans 673" },
+
+  // ECON 155
+  { course: "e155", type: "LEC", day: "fri", start: 15*60, end: 17*60+59, loc: "VLSB 2060" },
+  { course: "e155", type: "OH",  day: "fri", start: 13*60, end: 14*60,     who: "Nilopa Shah（线下）", loc: "Evans 531" },
+  { course: "e155", type: "OH",  day: "thu", start: 17*60, end: 18*60,     who: "Nilopa Shah（线上 Zoom）", loc: "https://berkeley.zoom.us/j/6282064864" },
+
+  // ENVECON C118
+  { course: "env118", type: "LEC", day: "tue", start: 14*60, end: 15*60+29, loc: "Haas F295" },
+  { course: "env118", type: "LEC", day: "thu", start: 14*60, end: 15*60+29, loc: "Haas F295" },
+  { course: "env118", type: "DIS", day: "fri", start: 9*60,  end: 9*60+59,  loc: "Dwinelle 79" },
+  { course: "env118", type: "OH",  day: "thu", start: 12*60, end: 13*60,    who: "Jeremy Magruder", loc: "224 Giannini" },
+  { course: "env118", type: "OH",  day: "mon", start: 10*60, end: 11*60,    who: "Miriam Gold", loc: "203 Giannini" },
+  { course: "env118", type: "OH",  day: "wed", start: 11*60+10, end: 12*60+10, who: "Zixu Chen", loc: "203 Giannini" },
+
+  // SOCIOL 198
+  { course: "soc198", type: "GRP", day: "fri", start: 11*60, end: 12*60+59, loc: "TBA" },
+];
+
+const DAY_START = 8*60;   // 8:00
+const DAY_END   = 19*60;  // 19:00
+const PX_PER_MIN = 1.35;
+
+function fmt(mins){
+  let h = Math.floor(mins/60), m = mins%60;
+  const ap = h < 12 ? "AM" : "PM";
+  let h12 = h % 12; if (h12 === 0) h12 = 12;
+  return m === 0 ? `${h12}${ap}` : `${h12}:${String(m).padStart(2,"0")}${ap}`;
+}
+
+// time column + hour lines
+const timeCol = document.getElementById("timeCol");
+const totalHeight = (DAY_END - DAY_START) * PX_PER_MIN;
+timeCol.style.height = totalHeight + "px";
+document.getElementById("gridWrap").style.setProperty("--hr", (60*PX_PER_MIN)+"px");
+
+for (let t = DAY_START; t <= DAY_END; t += 60) {
+  const lbl = document.createElement("div");
+  lbl.className = "time-label";
+  lbl.style.top = ((t - DAY_START) * PX_PER_MIN) + "px";
+  lbl.textContent = fmt(t);
+  timeCol.appendChild(lbl);
+}
+
+const dayCols = { mon: document.getElementById("col-mon"), tue: document.getElementById("col-tue"),
+  wed: document.getElementById("col-wed"), thu: document.getElementById("col-thu"), fri: document.getElementById("col-fri") };
+Object.values(dayCols).forEach(c => c.style.height = totalHeight + "px");
+
+// group events per day, cluster overlaps, assign columns (like calendar layout)
+function layoutDay(events) {
+  events = events.slice().sort((a,b)=> a.start - b.start || a.end - b.end);
+  const clusters = [];
+  let cur = [];
+  let curEnd = -1;
+  for (const ev of events) {
+    if (cur.length === 0 || ev.start < curEnd) {
+      cur.push(ev);
+      curEnd = Math.max(curEnd, ev.end);
+    } else {
+      clusters.push(cur);
+      cur = [ev];
+      curEnd = ev.end;
+    }
+  }
+  if (cur.length) clusters.push(cur);
+
+  const placed = [];
+  for (const cluster of clusters) {
+    const cols = [];
+    const colOf = new Map();
+    for (const ev of cluster) {
+      let assigned = -1;
+      for (let i=0;i<cols.length;i++){
+        if (cols[i] <= ev.start) { assigned = i; break; }
+      }
+      if (assigned === -1) { assigned = cols.length; cols.push(ev.end); }
+      else { cols[assigned] = ev.end; }
+      colOf.set(ev, assigned);
+    }
+    const totalCols = cols.length;
+    for (const ev of cluster) {
+      placed.push({ ev, col: colOf.get(ev), totalCols });
+    }
+  }
+  return placed;
+}
+
+const byDay = { mon: [], tue: [], wed: [], thu: [], fri: [] };
+EVENTS.forEach(ev => byDay[ev.day].push(ev));
+
+for (const day of Object.keys(byDay)) {
+  const placed = layoutDay(byDay[day]);
+  const container = dayCols[day];
+  for (const { ev, col, totalCols } of placed) {
+    const c = COURSES[ev.course];
+    const top = (ev.start - DAY_START) * PX_PER_MIN;
+    const height = Math.max((ev.end - ev.start) * PX_PER_MIN, 34);
+    const widthPct = 100 / totalCols;
+    const leftPct = col * widthPct;
+
+    const div = document.createElement("div");
+    const isOH = ev.type === "OH";
+    const isLec = ev.type === "LEC";
+    div.className = "event" + (isOH ? " oh" : "") + (isLec ? " lec" : "");
+    div.style.top = top + "px";
+    div.style.height = height + "px";
+    div.style.left = `calc(${leftPct}% + 2px)`;
+    div.style.width = `calc(${widthPct}% - 4px)`;
+    div.style.setProperty("--ecolor", c.color);
+    div.style.setProperty("--edark", c.dark);
+    if (!isOH) div.style.background = c.color;
+
+    if (isOH) {
+      const isLink = /^https?:\/\//.test(ev.loc || "");
+      const locHtml = isLink
+        ? `<a href="${ev.loc}" target="_blank" rel="noopener" style="color:inherit; text-decoration: underline;">加入 Zoom</a>`
+        : (ev.loc || "");
+      div.innerHTML = `
+        <span class="t">OH – ${c.name}</span>
+        <span class="m">${ev.who || ""}</span>
+        <span class="m">${locHtml}</span>
+        <span class="time">${fmt(ev.start)}–${fmt(ev.end)}</span>
+      `;
+    } else {
+      const typeLabel = ev.type === "GRP" ? "小组研讨" : ev.type;
+      div.innerHTML = `
+        <span class="t">${c.name}</span>
+        <span class="m">${typeLabel}${ev.loc ? " · " + ev.loc : ""}</span>
+        <span class="time">${fmt(ev.start)}–${fmt(ev.end)}</span>
+      `;
+    }
+    container.appendChild(div);
+  }
+}
+
+// legend
+const legend = document.getElementById("legend");
+const group1 = document.createElement("div");
+group1.className = "legend-group";
+group1.innerHTML = `<h3>课程</h3>` + Object.values(COURSES).map(c =>
+  `<div class="legend-item"><span class="swatch" style="background:${c.color}"></span>${c.name} — ${c.full}</div>`
+).join("");
+legend.appendChild(group1);
+</script>
+</body>
+</html>
